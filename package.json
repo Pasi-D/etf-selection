@@ -1,8 +1,9 @@
 {
     "name": "securities-app",
     "private": true,
-    "workspaces": ["securities-studio"],
+    "workspaces": ["securities-studio", "securities-web-app"],
     "scripts": {
-        "cms:dev": "yarn workspace securities-studio develop"
+        "cms:dev": "yarn workspace securities-studio develop",
+        "web:dev": "yarn workspace securities-web-app dev"
     }
 }
