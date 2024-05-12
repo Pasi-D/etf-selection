@@ -1,0 +1,36 @@
+{
+  "kind": "collectionType",
+  "collectionName": "etfs",
+  "info": {
+    "singularName": "etf",
+    "pluralName": "etfs",
+    "displayName": "Etf"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "Name": {
+      "type": "string",
+      "required": true,
+      "unique": true
+    },
+    "Ticker": {
+      "type": "string",
+      "required": true
+    },
+    "AssetClass": {
+      "type": "string",
+      "required": true
+    },
+    "InceptionYear": {
+      "type": "date",
+      "required": true
+    },
+    "ExpenseRatio": {
+      "type": "decimal",
+      "required": true
+    }
+  }
+}
