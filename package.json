@@ -1,0 +1,8 @@
+{
+    "name": "securities-app",
+    "private": true,
+    "workspaces": ["securities-studio"],
+    "scripts": {
+        "cms:dev": "yarn workspace securities-studio develop"
+    }
+}
