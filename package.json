@@ -4,6 +4,7 @@
     "workspaces": ["securities-studio", "securities-web-app"],
     "scripts": {
         "cms:dev": "yarn workspace securities-studio develop",
+        "cms:seed": "yarn workspace securities-studio seed",
         "web:dev": "yarn workspace securities-web-app dev"
     }
 }
