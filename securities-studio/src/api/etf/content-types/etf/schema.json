@@ -4,7 +4,8 @@
   "info": {
     "singularName": "etf",
     "pluralName": "etfs",
-    "displayName": "Etf"
+    "displayName": "Etf",
+    "description": ""
   },
   "options": {
     "draftAndPublish": true
@@ -16,14 +17,6 @@
       "required": true,
       "unique": true
     },
-    "Ticker": {
-      "type": "string",
-      "required": true
-    },
-    "AssetClass": {
-      "type": "string",
-      "required": true
-    },
     "InceptionYear": {
       "type": "date",
       "required": true
@@ -31,6 +24,16 @@
     "ExpenseRatio": {
       "type": "decimal",
       "required": true
+    },
+    "AssetClass": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "api::asset-class.asset-class"
+    },
+    "Ticker": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "api::ticker.ticker"
     }
   }
 }

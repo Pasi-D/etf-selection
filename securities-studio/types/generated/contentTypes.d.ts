@@ -362,32 +362,6 @@ export interface AdminTransferTokenPermission extends Schema.CollectionType {
   };
 }
 
-export interface ApiEtfEtf extends Schema.CollectionType {
-  collectionName: 'etfs';
-  info: {
-    singularName: 'etf';
-    pluralName: 'etfs';
-    displayName: 'Etf';
-  };
-  options: {
-    draftAndPublish: true;
-  };
-  attributes: {
-    Name: Attribute.String & Attribute.Required & Attribute.Unique;
-    Ticker: Attribute.String & Attribute.Required;
-    AssetClass: Attribute.String & Attribute.Required;
-    InceptionYear: Attribute.Date & Attribute.Required;
-    ExpenseRatio: Attribute.Decimal & Attribute.Required;
-    createdAt: Attribute.DateTime;
-    updatedAt: Attribute.DateTime;
-    publishedAt: Attribute.DateTime;
-    createdBy: Attribute.Relation<'api::etf.etf', 'oneToOne', 'admin::user'> &
-      Attribute.Private;
-    updatedBy: Attribute.Relation<'api::etf.etf', 'oneToOne', 'admin::user'> &
-      Attribute.Private;
-  };
-}
-
 export interface PluginUploadFile extends Schema.CollectionType {
   collectionName: 'files';
   info: {
@@ -814,6 +788,104 @@ export interface PluginI18NLocale extends Schema.CollectionType {
   };
 }
 
+export interface ApiAssetClassAssetClass extends Schema.CollectionType {
+  collectionName: 'asset_classes';
+  info: {
+    singularName: 'asset-class';
+    pluralName: 'asset-classes';
+    displayName: 'Asset Class';
+    description: '';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    Name: Attribute.String & Attribute.Required;
+    Code: Attribute.String & Attribute.Required & Attribute.Unique;
+    createdAt: Attribute.DateTime;
+    updatedAt: Attribute.DateTime;
+    publishedAt: Attribute.DateTime;
+    createdBy: Attribute.Relation<
+      'api::asset-class.asset-class',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+    updatedBy: Attribute.Relation<
+      'api::asset-class.asset-class',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+  };
+}
+
+export interface ApiEtfEtf extends Schema.CollectionType {
+  collectionName: 'etfs';
+  info: {
+    singularName: 'etf';
+    pluralName: 'etfs';
+    displayName: 'Etf';
+    description: '';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    Name: Attribute.String & Attribute.Required & Attribute.Unique;
+    InceptionYear: Attribute.Date & Attribute.Required;
+    ExpenseRatio: Attribute.Decimal & Attribute.Required;
+    AssetClass: Attribute.Relation<
+      'api::etf.etf',
+      'oneToOne',
+      'api::asset-class.asset-class'
+    >;
+    Ticker: Attribute.Relation<
+      'api::etf.etf',
+      'oneToOne',
+      'api::ticker.ticker'
+    >;
+    createdAt: Attribute.DateTime;
+    updatedAt: Attribute.DateTime;
+    publishedAt: Attribute.DateTime;
+    createdBy: Attribute.Relation<'api::etf.etf', 'oneToOne', 'admin::user'> &
+      Attribute.Private;
+    updatedBy: Attribute.Relation<'api::etf.etf', 'oneToOne', 'admin::user'> &
+      Attribute.Private;
+  };
+}
+
+export interface ApiTickerTicker extends Schema.CollectionType {
+  collectionName: 'tickers';
+  info: {
+    singularName: 'ticker';
+    pluralName: 'tickers';
+    displayName: 'Ticker';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    DisplayName: Attribute.String & Attribute.Required;
+    Symbol: Attribute.String & Attribute.Required & Attribute.Unique;
+    createdAt: Attribute.DateTime;
+    updatedAt: Attribute.DateTime;
+    publishedAt: Attribute.DateTime;
+    createdBy: Attribute.Relation<
+      'api::ticker.ticker',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+    updatedBy: Attribute.Relation<
+      'api::ticker.ticker',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+  };
+}
+
 declare module '@strapi/types' {
   export module Shared {
     export interface ContentTypes {
@@ -824,7 +896,6 @@ declare module '@strapi/types' {
       'admin::api-token-permission': AdminApiTokenPermission;
       'admin::transfer-token': AdminTransferToken;
       'admin::transfer-token-permission': AdminTransferTokenPermission;
-      'api::etf.etf': ApiEtfEtf;
       'plugin::upload.file': PluginUploadFile;
       'plugin::upload.folder': PluginUploadFolder;
       'plugin::content-releases.release': PluginContentReleasesRelease;
@@ -833,6 +904,9 @@ declare module '@strapi/types' {
       'plugin::users-permissions.role': PluginUsersPermissionsRole;
       'plugin::users-permissions.user': PluginUsersPermissionsUser;
       'plugin::i18n.locale': PluginI18NLocale;
+      'api::asset-class.asset-class': ApiAssetClassAssetClass;
+      'api::etf.etf': ApiEtfEtf;
+      'api::ticker.ticker': ApiTickerTicker;
     }
   }
 }

@@ -15,12 +15,13 @@ const columnDefs: AgGridReactProps<Security>["columnDefs"] = [
   },
   {
     headerName: "Ticker",
-    valueGetter: p => p?.data?.Ticker,
+    valueGetter: p => p?.data?.Ticker?.data?.attributes?.DisplayName,
     flex: 1,
   },
   {
     headerName: "Asset Class",
     field: "AssetClass",
+    valueGetter: p => p?.data?.AssetClass?.data?.attributes?.Name,
     filter: SetFilter,
     filterParams: {
       options: [

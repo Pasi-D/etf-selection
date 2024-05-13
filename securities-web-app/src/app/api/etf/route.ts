@@ -3,7 +3,7 @@ import { StrapiResponse } from "@/app/types/data-types";
 export const GET = async (request: Request) => {
   const host = process.env.STRAPI_HOST;
   const token = process.env.STRAPI_API_KEY;
-  const res = await fetch(`${host}/api/etfs`, {
+  const res = await fetch(`${host}/api/etfs?populate=*`, {
     headers: {
       Authorization: `Bearer ${token}`,
     },

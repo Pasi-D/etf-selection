@@ -1,0 +1,25 @@
+{
+  "kind": "collectionType",
+  "collectionName": "asset_classes",
+  "info": {
+    "singularName": "asset-class",
+    "pluralName": "asset-classes",
+    "displayName": "Asset Class",
+    "description": ""
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "Name": {
+      "type": "string",
+      "required": true
+    },
+    "Code": {
+      "type": "string",
+      "required": true,
+      "unique": true
+    }
+  }
+}
