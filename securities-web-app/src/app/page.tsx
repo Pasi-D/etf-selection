@@ -1,15 +1,14 @@
 "use client";
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { AgGridReact, AgGridReactProps, getInstance } from "ag-grid-react";
+import { useCallback, useEffect, useMemo, useState } from "react";
+import { AgGridReactProps } from "ag-grid-react";
 import dayjs from "dayjs";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 
-import { AssetClass, Security } from "./types/data-types";
 import AgGridTable from "./components/AgGridTable";
 import DropDownFilter from "./components/filters/dropDownFilter";
-import RangeFilter from "./components/filters/rangeFilter";
+import InputFilter from "./components/filters/inputFilter";
+import { AssetClass, Security } from "./types/data-types";
 import { FilterParams } from "./constants/enums";
-import { IFilter } from "ag-grid-community";
 
 const Home = () => {
   const searchParams = useSearchParams();
@@ -23,6 +22,8 @@ const Home = () => {
   >([]);
 
   const assetClassFilterParam = searchParams.get(FilterParams.ASSET_CLASS);
+  const inceptionYearFilterParam = searchParams.get(FilterParams.INCEPTION_YEAR);
+  const expenseRatioFilterParam = searchParams.get(FilterParams.EXPENSE_RATIO);
 
   const onAssetClassFilterChange = useCallback(
     (code: string | undefined) => {
@@ -31,6 +32,34 @@ const Home = () => {
         params.set(FilterParams.ASSET_CLASS, code);
       } else {
         params.delete(FilterParams.ASSET_CLASS);
+      }
+
+      replace(`${pathname}?${params.toString()}`);
+    },
+    [pathname, replace, searchParams],
+  );
+
+  const onInceptionFilterChange = useCallback(
+    (year: string | undefined) => {
+      const params = new URLSearchParams(searchParams);
+      if (year) {
+        params.set(FilterParams.INCEPTION_YEAR, year);
+      } else {
+        params.delete(FilterParams.INCEPTION_YEAR);
+      }
+
+      replace(`${pathname}?${params.toString()}`);
+    },
+    [pathname, replace, searchParams],
+  );
+
+  const onExpenseRatioFilterChange = useCallback(
+    (ratio: string | undefined) => {
+      const params = new URLSearchParams(searchParams);
+      if (ratio) {
+        params.set(FilterParams.EXPENSE_RATIO, ratio);
+      } else {
+        params.delete(FilterParams.EXPENSE_RATIO);
       }
 
       replace(`${pathname}?${params.toString()}`);
@@ -66,12 +95,16 @@ const Home = () => {
         headerName: "Inception Year",
         field: "InceptionYear",
         valueFormatter: p => dayjs(p?.data?.InceptionYear).format("YYYY"),
-        filter: RangeFilter,
+        filter: InputFilter,
         filterParams: {
           inputType: "number",
           inputMin: "1990",
           inputMax: "2099",
           inputStep: 1,
+          inputPattern: "YYYY",
+          valueDataType: "date",
+          onApplyFilter: onInceptionFilterChange,
+          defaultFilterValue: inceptionYearFilterParam,
         },
         flex: 1,
       },
@@ -79,17 +112,28 @@ const Home = () => {
         headerName: "Expense Ratio",
         field: "ExpenseRatio",
         valueGetter: p => p?.data?.ExpenseRatio + "%",
-        filter: RangeFilter,
+        filter: InputFilter,
         filterParams: {
           inputType: "number",
           inputMin: "0",
           inputMax: "1",
           inputStep: 0.01,
+          valueDataType: "number",
+          onApplyFilter: onExpenseRatioFilterChange,
+          defaultFilterValue: expenseRatioFilterParam
         },
         flex: 1,
       },
     ];
-  }, [assetClassFilterOptions, assetClassFilterParam, onAssetClassFilterChange]);
+  }, [
+    assetClassFilterOptions,
+    assetClassFilterParam,
+    inceptionYearFilterParam,
+    onAssetClassFilterChange,
+    onInceptionFilterChange,
+    expenseRatioFilterParam,
+    onExpenseRatioFilterChange,
+  ]);
 
   const getAssetClasses = useCallback(() => {
     const path = `/api/asset-class`;
@@ -115,8 +159,22 @@ const Home = () => {
   const getSecurities = useCallback(() => {
     setLoading(true);
     let path = `/api/etf`;
-    if (assetClassFilterParam) {
-      path = `/api/etf?assetClass=${assetClassFilterParam}`;
+    if (assetClassFilterParam || inceptionYearFilterParam || expenseRatioFilterParam) {
+      let filterParams = "";
+
+      if (assetClassFilterParam) {
+        filterParams += `${FilterParams.ASSET_CLASS}=${assetClassFilterParam}`;
+      }
+
+      if (inceptionYearFilterParam) {
+        filterParams += `${filterParams ? "&" : ""}${FilterParams.INCEPTION_YEAR}=${inceptionYearFilterParam}`;
+      }
+
+      if (expenseRatioFilterParam) {
+        filterParams += `${filterParams ? "&" : ""}${FilterParams.EXPENSE_RATIO}=${expenseRatioFilterParam}`;
+      }
+
+      path = `/api/etf?${filterParams}`;
     }
     fetch(path)
       .then(res => res.json())
@@ -126,7 +184,7 @@ const Home = () => {
       .finally(() => {
         setLoading(false);
       });
-  }, [assetClassFilterParam]);
+  }, [assetClassFilterParam, expenseRatioFilterParam, inceptionYearFilterParam]);
 
   useEffect(() => {
     getAssetClasses();

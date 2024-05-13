@@ -55,7 +55,8 @@ const DropDownFilter: React.FC<DropDownFilterProps> = ({
 
   useEffect(() => {
     if (defaultFilterValue && options.length) {
-      const isFilterAvailable = options.findIndex(({ value }) => value === defaultFilterValue);
+      const isFilterAvailable =
+        options.findIndex(({ value }) => value === defaultFilterValue) !== -1;
       if (isFilterAvailable) {
         setInputValue(defaultFilterValue);
       } else {
