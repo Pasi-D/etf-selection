@@ -59,6 +59,11 @@ const Home = () => {
       {
         headerName: "Name",
         valueGetter: p => p?.data?.Name,
+        filter: InputFilter,
+        filterParams: {
+          inputType: "text",
+          valueDataType: "string",
+        },
         flex: 2,
       },
       {

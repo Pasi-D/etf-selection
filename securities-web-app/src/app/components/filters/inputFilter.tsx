@@ -11,7 +11,7 @@ interface InputFilterProps extends CustomFilterProps {
   inputMax?: InputHTMLAttributes<HTMLInputElement>["max"];
   inputStep?: InputHTMLAttributes<HTMLInputElement>["step"];
   valueDataType: "date" | "number" | "string";
-  onApplyFilter: (value: string | undefined) => void;
+  onApplyFilter?: (value: string | undefined) => void;
   defaultFilterValue: string | null;
 }
 
@@ -27,7 +27,7 @@ const InputFilter: React.FC<InputFilterProps> = ({
   getValue,
   valueDataType,
   onApplyFilter,
-  defaultFilterValue
+  defaultFilterValue,
 }) => {
   const doesFilterPass = useCallback(
     (params: IDoesFilterPassParams) => {
@@ -47,7 +47,11 @@ const InputFilter: React.FC<InputFilterProps> = ({
           break;
       }
 
-      return value === filterValue;
+      if (valueDataType === "string") {
+        return value.toLowerCase().includes(filterValue.toLowerCase());
+      } else {
+        return value === filterValue;
+      }
     },
     [model, getValue, valueDataType, inputPattern],
   );
@@ -65,10 +69,12 @@ const InputFilter: React.FC<InputFilterProps> = ({
 
   const onValueChange = (value: string | number | undefined) => {
     onModelChange(value);
-    if (typeof value === "number") {
-      onApplyFilter(`${value}`);
-    } else {
-      onApplyFilter(value);
+    if (onApplyFilter) {
+      if (typeof value === "number") {
+        onApplyFilter(`${value}`);
+      } else {
+        onApplyFilter(value);
+      }
     }
   };
 
