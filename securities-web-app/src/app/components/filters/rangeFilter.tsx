@@ -1,18 +1,37 @@
 import { CustomFilterProps } from "ag-grid-react";
+import { InputHTMLAttributes } from "react";
 
-interface RangeFilterProps extends CustomFilterProps {}
+interface RangeFilterProps extends CustomFilterProps {
+  inputType?: InputHTMLAttributes<HTMLInputElement>["type"];
+  inputPattern?: InputHTMLAttributes<HTMLInputElement>["pattern"];
+  inputMin?: InputHTMLAttributes<HTMLInputElement>["min"];
+  inputMax?: InputHTMLAttributes<HTMLInputElement>["max"];
+  inputStep?: InputHTMLAttributes<HTMLInputElement>["step"];
+}
 
-const RangeFilter: React.FC<RangeFilterProps> = () => {
+const RangeFilter: React.FC<RangeFilterProps> = ({
+  inputType = "text",
+  inputPattern,
+  inputMax,
+  inputMin,
+  inputStep,
+}) => {
   return (
     <div className="p-2 w-52">
       <div className="flex flex-row justify-between">
         <input
-          type="text"
+          type={inputType}
+          pattern={inputPattern}
+          min={inputMin}
+          step={inputStep}
           className="w-[45%] p-1 rounded-md border border-gray-300 focus:outline-none focus:ring-1 focus:ring-blue-500"
         />
         <span>-</span>
         <input
-          type="text"
+          type={inputType}
+          pattern={inputPattern}
+          max={inputMax}
+          step={inputStep}
           className="w-[45%] p-1 rounded-md border border-gray-300 focus:outline-none focus:ring-1 focus:ring-blue-500"
         />
       </div>
