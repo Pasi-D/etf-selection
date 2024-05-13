@@ -25,46 +25,33 @@ const Home = () => {
   const inceptionYearFilterParam = searchParams.get(FilterParams.INCEPTION_YEAR);
   const expenseRatioFilterParam = searchParams.get(FilterParams.EXPENSE_RATIO);
 
-  const onAssetClassFilterChange = useCallback(
-    (code: string | undefined) => {
+  const onFilterChange = useCallback(
+    (type: `${FilterParams}`, value: string | undefined) => {
       const params = new URLSearchParams(searchParams);
-      if (code) {
-        params.set(FilterParams.ASSET_CLASS, code);
+      if (value) {
+        params.set(type, value);
       } else {
-        params.delete(FilterParams.ASSET_CLASS);
+        params.delete(type);
       }
 
       replace(`${pathname}?${params.toString()}`);
     },
     [pathname, replace, searchParams],
+  );
+
+  const onAssetClassFilterChange = useCallback(
+    (code: string | undefined) => onFilterChange(FilterParams.ASSET_CLASS, code),
+    [onFilterChange],
   );
 
   const onInceptionFilterChange = useCallback(
-    (year: string | undefined) => {
-      const params = new URLSearchParams(searchParams);
-      if (year) {
-        params.set(FilterParams.INCEPTION_YEAR, year);
-      } else {
-        params.delete(FilterParams.INCEPTION_YEAR);
-      }
-
-      replace(`${pathname}?${params.toString()}`);
-    },
-    [pathname, replace, searchParams],
+    (year: string | undefined) => onFilterChange(FilterParams.INCEPTION_YEAR, year),
+    [onFilterChange],
   );
 
   const onExpenseRatioFilterChange = useCallback(
-    (ratio: string | undefined) => {
-      const params = new URLSearchParams(searchParams);
-      if (ratio) {
-        params.set(FilterParams.EXPENSE_RATIO, ratio);
-      } else {
-        params.delete(FilterParams.EXPENSE_RATIO);
-      }
-
-      replace(`${pathname}?${params.toString()}`);
-    },
-    [pathname, replace, searchParams],
+    (ratio: string | undefined) => onFilterChange(FilterParams.EXPENSE_RATIO, ratio),
+    [onFilterChange],
   );
 
   const columnDefs: AgGridReactProps<Security>["columnDefs"] = useMemo(() => {
@@ -120,7 +107,7 @@ const Home = () => {
           inputStep: 0.01,
           valueDataType: "number",
           onApplyFilter: onExpenseRatioFilterChange,
-          defaultFilterValue: expenseRatioFilterParam
+          defaultFilterValue: expenseRatioFilterParam,
         },
         flex: 1,
       },
