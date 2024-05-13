@@ -1,7 +1,7 @@
 "use client";
+import { AgGridReact, AgGridReactProps } from "ag-grid-react";
 import "ag-grid-community/styles/ag-grid.css";
 import "ag-grid-community/styles/ag-theme-quartz.css";
-import { AgGridReact, AgGridReactProps } from "ag-grid-react";
 
 interface AgGridTableProps<T> {
   rowData: Array<T>;
@@ -17,7 +17,7 @@ const AgGridTable: <T extends object>(props: AgGridTableProps<T>) => React.React
   return (
     <div className="w-[100%] h-[100%] p-2">
       <div className="w-[100%] h-[100%] ag-theme-quartz">
-        <AgGridReact rowData={rowData} columnDefs={columnDefs} />
+        <AgGridReact rowData={rowData} columnDefs={columnDefs} reactiveCustomComponents />
       </div>
     </div>
   );

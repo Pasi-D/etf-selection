@@ -11,7 +11,7 @@ interface StrapiCommonAttributes {
   updatedAt: string;
 }
 
-interface AssetClass {
+export interface AssetClass {
   Name: string;
   Code: string;
 }
